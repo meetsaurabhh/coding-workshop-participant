@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
+from app.core.exceptions import AuthenticationError
 from app.core.dependencies import get_current_user
 from app.db.session import get_db
 from app.dto.auth_dto import TokenResponse
