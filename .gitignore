@@ -256,3 +256,28 @@ tfplan
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+
+# Lambda hot-reload dependencies (installed locally, rebuilt by Terraform)
+backend/python-service/*.dist-info/
+backend/python-service/*.libs/
+backend/*/\.pip_installed
+
+# --- ACME project tracker ---
+# Lambda hot-reload installs pip packages directly into the service folder.
+# Ignore everything there, then allow back only the source we actually own.
+backend/python-service/*
+!backend/python-service/app/
+!backend/python-service/tests/
+!backend/python-service/function.py
+!backend/python-service/requirements.txt
+!backend/python-service/requirements-dev.txt
+!backend/python-service/pytest.ini
+!backend/python-service/postgres_service.py
+!backend/python-service/mongo_service.py
+
+__pycache__/
+*.pyc
+.pytest_cache/
+htmlcov/
+.coverage
+backend/.venv-test/

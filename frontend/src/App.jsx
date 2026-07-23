@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from '/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { Box, CircularProgress } from '@mui/material'
+import { AuthProvider, useAuth } from './auth'
+import Layout from './components/Layout'
+import Login from './pages/Login'
+import Dashboard from './pages/Dashboard'
+import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
+import Resources from './pages/Resources'
+import Budget from './pages/Budget'
+import Users from './pages/Users'
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function Protected({ children, adminOnly = false }) {
+  const { user, loading, isAdmin } = useAuth()
+  if (loading) return <Box sx={{ display: 'grid', placeItems: 'center', minHeight: '100vh' }}><CircularProgress /></Box>
+  if (!user) return <Navigate to="/login" replace />
+  if (adminOnly && !isAdmin) return <Navigate to="/" replace />
+  return <Layout>{children}</Layout>
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Protected><Dashboard /></Protected>} />
+          <Route path="/projects" element={<Protected><Projects /></Protected>} />
+          <Route path="/projects/:id" element={<Protected><ProjectDetail /></Protected>} />
+          <Route path="/resources" element={<Protected><Resources /></Protected>} />
+          <Route path="/budget" element={<Protected><Budget /></Protected>} />
+          <Route path="/users" element={<Protected adminOnly><Users /></Protected>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  )
+}
