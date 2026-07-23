@@ -17,7 +17,7 @@ export default function Budget() {
 
   useEffect(() => {
     api.get('/api/analytics/budget')
-      .then((r) => setRows(r.data))
+      .then((r) => setRows(Array.isArray(r.data) ? r.data : []))
       .catch((e) => setError(readError(e, 'Could not load budget figures.')))
   }, [])
 

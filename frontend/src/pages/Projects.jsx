@@ -41,12 +41,12 @@ export default function Projects() {
         api.get('/api/projects', { params }),
         api.get('/api/projects/departments'),
       ])
-      setRows(p.data); setDepartments(d.data); setError('')
+      setRows(Array.isArray(p.data) ? p.data : []); setDepartments(Array.isArray(d.data) ? d.data : []); setError('')
     } catch (e) { setError(readError(e, 'Could not load projects.')) }
   }, [filters])
 
   useEffect(() => { load() }, [load])
-  useEffect(() => { api.get('/api/users').then((r) => setUsers(r.data)).catch(() => {}) }, [])
+  useEffect(() => { api.get('/api/users').then((r) => setUsers(Array.isArray(r.data) ? r.data : [])).catch(() => {}) }, [])
 
   const openCreate = () => { setForm(EMPTY); setDialog('create') }
   const openEdit = (row) => {

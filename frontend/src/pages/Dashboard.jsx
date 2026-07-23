@@ -37,7 +37,7 @@ export default function Dashboard() {
       api.get('/api/analytics/at-risk'),
       api.get('/api/analytics/over-allocated'),
     ])
-      .then(([s, r, o]) => { setSummary(s.data); setAtRisk(r.data); setOverAllocated(o.data) })
+      .then(([s, r, o]) => { setSummary(Array.isArray(s.data) ? s.data : []); setAtRisk(Array.isArray(r.data) ? r.data : []); setOverAllocated(Array.isArray(o.data) ? o.data : []) })
       .catch((e) => setError(readError(e, 'Could not load the dashboard.')))
   }, [])
 
